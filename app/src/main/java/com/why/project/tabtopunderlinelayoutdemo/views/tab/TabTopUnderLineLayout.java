@@ -2,10 +2,12 @@ package com.why.project.tabtopunderlinelayoutdemo.views.tab;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.why.project.tabtopunderlinelayoutdemo.R;
@@ -70,6 +72,9 @@ public class TabTopUnderLineLayout extends LinearLayout {
 			//============引用选项卡的各个选项的布局文件=================
 			View toptabitemView = LayoutInflater.from(mContext).inflate(R.layout.tab_top_underline_item, this, false);
 
+			//===========选项卡的根布局==========
+			RelativeLayout toptabLayout = (RelativeLayout) toptabitemView.findViewById(R.id.toptabLayout);
+
 			//===========设置选项卡的文字==========
 			final TextView top_title = (TextView) toptabitemView.findViewById(R.id.top_title);
 			//设置选项卡的文字
@@ -77,8 +82,14 @@ public class TabTopUnderLineLayout extends LinearLayout {
 			//===========设置选项卡控件的Tag(索引)==========用于后续的切换更改图片和文字
 			top_title.setTag("tag"+index);
 
-			//===========设置选项卡控件的下划线==========
-			final View top_underline = (View) toptabitemView.findViewById(R.id.top_underline);
+			//===========设置选项卡控件的下划线【不能使用View，否则setWidth不能用】==========
+			final TextView top_underline = (TextView) toptabitemView.findViewById(R.id.top_underline);
+			//设置下划线的宽度值==根布局的宽度
+			top_title.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+			Log.w("why", "top_title.getMeasuredWidth()="+top_title.getMeasuredWidth());
+			toptabLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+			Log.w("why", "toptabLayout.getMeasuredWidth()="+toptabLayout.getMeasuredWidth());
+			top_underline.setWidth(top_title.getMeasuredWidth());//手动设置下划线的宽度值
 
 			//添加选项卡各个选项的触发事件监听
 			toptabitemView.setOnClickListener(new OnClickListener() {
